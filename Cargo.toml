@@ -11,4 +11,5 @@ regex = "1.10.3"
 
 [dev-dependencies]
 indoc = "2.0.4"
+rstest = {version="0.18.2", default-features=false}
 tempdir = "0.3.7"

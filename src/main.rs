@@ -1,5 +1,6 @@
 #![allow(dead_code, unused_imports)]
-mod file;
+mod alias_list;
+mod alias;
 fn main() {
 
 }
