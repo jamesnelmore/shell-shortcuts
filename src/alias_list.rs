@@ -55,10 +55,12 @@ impl AliasList {
         }
     }
 
+    #[allow(unused_variables)]
     fn remove_shortcut(&mut self, shortcut: impl Into<String>) -> Option<()> {
         todo!();
     }
 
+    #[allow(unused_variables)]
     fn replace_alias(&mut self, new: Alias) -> Option<()> {
         todo!();
     }
