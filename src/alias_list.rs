@@ -1,22 +1,23 @@
 use std::path::Path;
-use std::io::{Read, self};
-use std::fs::{self, File};
+// use std::io::{Read, self};
+use std::fs::{self};
 use std::vec::Vec;
 use regex::Regex;
 use crate::alias::Alias;
 
 
 #[derive(PartialEq, Eq, Hash, Debug)]
-struct AliasList {
+pub struct AliasList {
     aliases: Vec<Alias>
 }
 
+#[allow(dead_code)]
 impl AliasList {
     fn new(vector: Vec<Alias>) -> AliasList {
         AliasList{aliases: vector}
     }
 
-    fn new_from_buffer(buf: impl Into<String>) -> AliasList {
+    pub fn new_from_buffer(buf: impl Into<String>) -> AliasList {
         let regex_str = r#"(?:alias )(?<shortcut>\S+)(?: ?= ?")(?<command>\S+)(?:")"#;
         let alias_regex: Regex = Regex::new(regex_str).unwrap();
 
@@ -39,8 +40,7 @@ impl AliasList {
 
         AliasList::new_from_buffer(file_contents)
     }
-
-    fn get_aliases(&self) -> Vec<Alias> {
+    pub fn get_aliases(&self) -> Vec<Alias> {
         // Return collection of Aliases in file
         self.aliases.clone()
     }

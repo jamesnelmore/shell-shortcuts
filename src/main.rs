@@ -1,4 +1,10 @@
-#![allow(dead_code, unused_imports)]
+// Rustc lints
+#![forbid(unsafe_code)]
+
+// Clippy lints
+#![warn(clippy::pedantic)]
+#![deny(clippy::enum_glob_use, clippy::unwrap_used)]
+
 mod alias;
 mod alias_list;
 use clap::{Parser, Subcommand};

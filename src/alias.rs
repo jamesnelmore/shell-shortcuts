@@ -5,6 +5,7 @@ pub struct Alias {
 }
 
 impl Alias {
+    #[allow(dead_code)]
     pub fn new<S: Into<String>>(shortcut: S, command: S) -> Alias {
         Alias {
             shortcut: shortcut.into(),
