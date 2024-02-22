@@ -1,34 +1,36 @@
-use std::path::PathBuf;
+use std::path::Path;
 // use std::io::{Read, self};
 use crate::alias::Alias;
 use regex::Regex;
 use std::fs::{self};
+use std::io;
 use std::vec::Vec;
 
 #[derive(PartialEq, Eq, Hash, Debug)]
 pub struct AliasList {
     aliases: Vec<Alias>,
-    path: PathBuf,
 }
 
 #[allow(dead_code)]
 impl AliasList {
-    fn new(aliases: Vec<Alias>, path: PathBuf) -> Self {
-        AliasList { aliases, path }
+    fn new(aliases: Vec<Alias>) -> Self {
+        AliasList { aliases }
     }
 
-    pub fn new_from_file(path: impl Into<PathBuf>) -> AliasList {
-        let file_contents = fs::read(path.into());
+    pub fn new_from_file(path: &Path) -> io::Result<Self> {
+        let file_contents = fs::read(&path)?;
         todo!();
     }
-    const fn aliases_from_buffer(buf: impl Into<String>) -> Option<Vec<Alias>> {
-        const REGEX: Regex =
+    #[inline]
+    fn aliases_from_buffer(buf: impl Into<String>) -> Option<Vec<Alias>> {
+        #[allow(clippy::unwrap_used)]
+        let regex: Regex =
             Regex::new(r#"(?:alias )(?<shortcut>\S+)(?: ?= ?")(?<command>\S+)(?:")"#).unwrap(); // TODO
                                                                                                 // document regex
         Some(
             buf.into()
                 .lines()
-                .map(|line| REGEX.captures(line).unwrap()) // TODO change to result
+                .map(|line| regex.captures(line).unwrap()) // TODO change to result
                 .map(|capture| {
                     Alias::new(
                         capture["shortcut"].to_string(),
@@ -71,12 +73,14 @@ impl AliasList {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod test {
     use super::*;
     use indoc::indoc;
     use rstest::{fixture, rstest};
     use std::fs::File;
     use std::io::Write;
+    use std::path::PathBuf;
     use tempdir::{self, TempDir};
 
     #[fixture]
@@ -85,6 +89,13 @@ mod test {
     alias alias_name = "command_to_run"
     alias test_command="anotherthing""#}
     }
+
+    #[fixture]
+    fn path_to_empty_temp_file() -> PathBuf {
+        // return new empty file in tempir
+        todo!()
+    }
+
     #[fixture]
     fn empty_alias_list() -> AliasList {
         AliasList::new(vec![])
@@ -103,10 +114,10 @@ mod test {
     }
 
     #[rstest]
-    fn test_aliaslist_from_buffer(an_alias_list: AliasList, an_alias_str: &str) {
-        let alias_list = AliasList::new_from_buffer(an_alias_str);
-        println!("{:?}", alias_list);
-        assert_eq!(an_alias_list, alias_list);
+    fn test_alias_vec_from_buffer(an_alias_list: AliasList, an_alias_str: &str) {
+        let alias_vec =
+            AliasList::aliases_from_buffer(an_alias_str).expect("Failed to create alias_vec.");
+        let alias_list = AliasList::new(alias_vec);
     }
 
     #[rstest]
@@ -116,7 +127,7 @@ mod test {
         let mut tmp_file = File::create(&tmp_path).unwrap();
         tmp_file.write(an_alias_str.as_bytes()).unwrap();
 
-        let test_list = AliasList::new_from_file(&tmp_path);
+        let test_list = AliasList::new_from_file(&tmp_path).unwrap();
         assert_eq!(test_list, an_alias_list);
     }
 
