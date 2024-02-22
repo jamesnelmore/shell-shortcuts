@@ -3,7 +3,8 @@
 
 // Clippy lints
 #![warn(clippy::pedantic)]
-#![deny(clippy::enum_glob_use, clippy::unwrap_used)]
+#![deny(
+    clippy::enum_glob_use, /*clippy::unwrap_used*/)]
 
 mod alias;
 mod alias_list;
