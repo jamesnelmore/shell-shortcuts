@@ -27,6 +27,6 @@ mod test {
 
     #[test]
     fn test_alias_inequality() {
-        assert_ne!(Alias::new("Foo", "Bar"), Alias::new("Baz", "Bor"))
+        assert_ne!(Alias::new("Foo", "Bar"), Alias::new("Baz", "Bor"));
     }
 }
