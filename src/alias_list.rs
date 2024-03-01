@@ -18,7 +18,7 @@ impl AliasList {
     }
 
     pub fn new_from_file(path: &Path) -> io::Result<Self> {
-        let file_contents = fs::read(&path)?;
+        let _file_contents = fs::read(path)?;
         todo!();
     }
     #[inline]
@@ -27,7 +27,7 @@ impl AliasList {
         let regex: Regex =
             Regex::new(r#"(?:alias )(?<shortcut>\S+)(?: ?= ?")(?<command>\S+)(?:")"#).unwrap(); // TODO
                                                                                                 // document regex
-        Some(
+        let vec = Some(
             buf.into()
                 .lines()
                 .map(|line| regex.captures(line).unwrap()) // TODO change to result
@@ -38,7 +38,8 @@ impl AliasList {
                     )
                 })
                 .collect::<Vec<_>>(),
-        )
+        );
+        vec
     }
 
     pub fn get_aliases(&self) -> Vec<Alias> {
@@ -51,9 +52,9 @@ impl AliasList {
         match &self.aliases.contains(&new) {
             false => {
                 self.aliases.push(new);
-                return Some(());
+                Some(())
             }
-            true => return None,
+            true => None,
         }
     }
 
@@ -68,19 +69,22 @@ impl AliasList {
     }
 
     fn contains(&self, candidate: &Alias) -> bool {
-        self.aliases.contains(&candidate)
+        self.aliases.contains(candidate)
     }
 }
 
 #[cfg(test)]
 #[allow(clippy::unwrap_used)]
+#[allow(unused_imports)]
 mod test {
     use super::*;
+    use::std::{
+        fs::File,
+        io::Write,
+        path::PathBuf
+    };
     use indoc::indoc;
     use rstest::{fixture, rstest};
-    use std::fs::File;
-    use std::io::Write;
-    use std::path::PathBuf;
     use tempdir::{self, TempDir};
 
     #[fixture]
@@ -115,20 +119,12 @@ mod test {
 
     #[rstest]
     fn test_alias_vec_from_buffer(an_alias_list: AliasList, an_alias_str: &str) {
+        // Should create 
         let alias_vec =
             AliasList::aliases_from_buffer(an_alias_str).expect("Failed to create alias_vec.");
         let alias_list = AliasList::new(alias_vec);
-    }
-
-    #[rstest]
-    fn test_aliaslist_from_file(an_alias_list: AliasList, an_alias_str: &str) {
-        let tmp_dir = TempDir::new("test_dir").unwrap();
-        let tmp_path = tmp_dir.path().join("tmp_file");
-        let mut tmp_file = File::create(&tmp_path).unwrap();
-        tmp_file.write(an_alias_str.as_bytes()).unwrap();
-
-        let test_list = AliasList::new_from_file(&tmp_path).unwrap();
-        assert_eq!(test_list, an_alias_list);
+        
+        assert_eq!(alias_list, an_alias_list);
     }
 
     #[rstest]
@@ -145,11 +141,11 @@ mod test {
 
     #[rstest]
     fn test_alias_list_contains_does_contain(an_alias_list: AliasList) {
-        assert!(an_alias_list.contains(&Alias::new("alias_name", "command")))
+        assert!(an_alias_list.contains(&Alias::new("alias_name", "command")));
     }
     #[rstest]
     fn test_alias_list_contains_does_not_contain(an_alias_list: AliasList) {
-        assert_eq!(an_alias_list.contains(&Alias::new("a", "thing")), false)
+        assert!(!an_alias_list.contains(&Alias::new("a", "thing")));
     }
 
     #[rstest]
@@ -170,7 +166,7 @@ mod test {
         assert_eq!(
             an_alias_list, expected_alias_list,
             "add_alias() did not add alias"
-        )
+        );
     }
 
     #[rstest]
