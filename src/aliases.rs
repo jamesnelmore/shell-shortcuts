@@ -49,8 +49,8 @@ impl AliasList {
 
     #[allow(unused)]
     const REGEX_STRING: &'static str = concat!(
-        r"^(:alias )",             // Lookbehind matching "alias " at start of line
-        r"(?<shortcut>.+)",        // Matches text after "alias " under "="
+        r"^(?:alias )",            // Lookbehind matching "alias " at start of line
+        r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
         r#"(?: ?= ?")"#,           // Matches but does not capture "="
         r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
     );
@@ -89,7 +89,7 @@ mod test_alias_list {
     #[fixture]
     fn sample_buf() -> &'static str {
         indoc! {r#"
-          alias cmd="Shortcut"
+          alias scut="cmd"
           alias thing="Do this"
           alias gs="git status"
         "#}
@@ -99,10 +99,27 @@ mod test_alias_list {
     fn sample_buf_aliases() -> AliasList {
         AliasList {
             aliases: vec![
-                Alias::new("cmd", "Shortcut"),
+                Alias::new("scut", "cmd"),
                 Alias::new("thing", "Do this"),
                 Alias::new("gs", "git status"),
             ],
+        }
+    }
+
+    // Test Regular Expression
+
+    #[rstest]
+    fn parse_regex_single_example() {
+        let haystack = r#"alias scut="Do this""#;
+
+        match AliasList::get_regex().captures(haystack) {
+            Some(capture) => {
+                assert_eq!(&capture["shortcut"], "scut");
+                assert_eq!(&capture["command"], "Do this");
+            }
+            None => {
+                panic!("Expected a match")
+            }
         }
     }
 
