@@ -15,7 +15,7 @@ impl AliasList {
 
     #[allow(unused)]
     pub fn add_alias(&mut self, alias: Alias) -> Option<()> {
-        if self.aliases.iter().any(|a| a.shortcut == alias.shortcut) {
+        if self.aliases.iter().any(|a| a.shortcut() == alias.shortcut()) {
             return None;
         }
         self.aliases.push(alias);
@@ -27,7 +27,7 @@ impl AliasList {
     pub fn to_buffer(&self) -> String {
         self.aliases
             .iter()
-            .map(|alias| format!("alias {}=\"{}\"", alias.shortcut, alias.command))
+            .map(|alias| format!("alias {}=\"{}\"", alias.shortcut(), alias.command()))
             .collect::<Vec<_>>()
             .join("\n")
     }
@@ -61,6 +61,12 @@ impl AliasList {
         AliasList { aliases }
     }
 }
+
+// todo!("Write iterator for AliasList");
+// Impl std::Iter for AliasList {
+//     type Alias;
+//     fn next(&mut self) -> Option<Self::Item
+// }
 
 #[cfg(test)]
 mod test_alias_list {
