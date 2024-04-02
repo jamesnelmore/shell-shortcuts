@@ -1,22 +1,6 @@
 use regex::{Regex, RegexBuilder};
 
-#[derive(Debug, PartialEq)]
-pub struct Alias {
-    pub shortcut: String,
-    pub command: String,
-}
-
-impl Alias {
-    pub fn new<S>(shortcut: S, command: S) -> Alias
-    where
-        S: Into<String>,
-    {
-        Alias {
-            shortcut: shortcut.into(),
-            command: command.into(),
-        }
-    }
-}
+use crate::alias::Alias;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
@@ -48,7 +32,6 @@ impl AliasList {
             .join("\n")
     }
 
-    #[allow(unused)]
     const REGEX_STRING: &'static str = concat!(
         r"^(?:alias )",            // Lookbehind matching "alias " at start of line
         r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
@@ -56,7 +39,6 @@ impl AliasList {
         r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
     );
 
-    #[allow(unused)]
     fn get_regex() -> Regex {
         #[allow(clippy::unwrap_used)]
         RegexBuilder::new(AliasList::REGEX_STRING)
@@ -65,8 +47,7 @@ impl AliasList {
             .unwrap()
     }
 
-    #[allow(unused)]
-    fn aliases_from_buf(buf: &str) -> AliasList {
+    pub fn aliases_from_buf(buf: &str) -> AliasList {
         let aliases = Self::get_regex()
             .captures_iter(buf)
             .map(|capture| {
@@ -166,21 +147,3 @@ mod test_alias_list {
     }
 }
 
-#[cfg(test)]
-mod test_alias {
-    use super::*;
-
-    #[test]
-    fn test_alias_equality() {
-        // TODO Parameterize with more cases
-        let alias1 = Alias::new("Foo", "Bar");
-        let alias2 = Alias::new("Foo", "Bar");
-        assert_eq!(alias1, alias2);
-    }
-
-    #[test]
-    fn test_alias_inequality() {
-        // TODO parameterize with more cases
-        assert_ne!(Alias::new("Foo", "Bar"), Alias::new("Baz", "Bor"));
-    }
-}

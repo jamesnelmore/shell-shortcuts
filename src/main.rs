@@ -6,6 +6,7 @@
 #![deny(
     clippy::enum_glob_use, /*clippy::unwrap_used*/)]
 
+mod alias;
 mod aliases;
 use clap::{Parser, Subcommand};
 use color_eyre::eyre::Result;
