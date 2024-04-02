@@ -1,6 +1,5 @@
 // Rustc lints
 #![forbid(unsafe_code)]
-
 // Clippy lints
 #![warn(clippy::pedantic)]
 #![deny(
@@ -8,33 +7,25 @@
 
 mod alias;
 mod aliases;
-use clap::{Parser, Subcommand};
-use color_eyre::eyre::Result;
+mod interface;
 
-#[derive(Parser)]
-#[command(version, about, long_about = None)]
-struct Interface {
-    #[command(subcommand)]
-    command: Commands,
-}
+use interface::{Interface, Commands};
+use clap::Parser;
 
-#[derive(Subcommand)]
-enum Commands {
-    Add { shortcut: String, command: String },
-    Remove,
-    Replace,
-    List,
-}
+// Plan
+// Initialize AliasList
+// - Check environment variables for path to alias file
+// - Parse alias file for AliasList
+// Execute user command with given AliasList
 
-fn main() -> Result<()> {
-    color_eyre::install()?;
 
+fn main() {
     let interface = Interface::parse();
     match &interface.command {
-        Commands::Add {..} => {
+        Commands::Add { .. } => {
             todo!("implement adding aliases")
         }
-        Commands::Remove => {
+        Commands::Remove { .. }=> {
             todo!("implement removing aliases")
         }
         Commands::Replace => {
@@ -43,5 +34,5 @@ fn main() -> Result<()> {
         Commands::List => {
             todo!("implement listing aliases")
         }
-    }
+    };
 }
