@@ -1,4 +1,6 @@
 use regex::{Regex, RegexBuilder};
+use std::fmt;
+use std::fmt::Display;
 
 use crate::alias::Alias;
 
@@ -15,21 +17,16 @@ impl AliasList {
 
     #[allow(unused)]
     pub fn add_alias(&mut self, alias: Alias) -> Option<()> {
-        if self.aliases.iter().any(|a| a.shortcut() == alias.shortcut()) {
+        if self
+            .aliases
+            .iter()
+            .any(|a| a.shortcut() == alias.shortcut())
+        {
             return None;
         }
         self.aliases.push(alias);
 
         Some(())
-    }
-
-    #[allow(unused)]
-    pub fn to_buffer(&self) -> String {
-        self.aliases
-            .iter()
-            .map(|alias| format!("alias {}=\"{}\"", alias.shortcut(), alias.command()))
-            .collect::<Vec<_>>()
-            .join("\n")
     }
 
     const REGEX_STRING: &'static str = concat!(
@@ -59,6 +56,19 @@ impl AliasList {
             .collect::<Vec<Alias>>();
 
         AliasList { aliases }
+    }
+}
+
+impl Display for AliasList {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let display = self
+            .aliases
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect::<Vec<String>>()
+            .join("\n");
+
+        write!(f, "{}", display + "\n")
     }
 }
 
@@ -97,6 +107,10 @@ mod test_alias_list {
         }
     }
 
+    #[rstest]
+    fn display_aliases(sample_aliases: AliasList, sample_buf: &str) {
+        assert_eq!(sample_aliases.to_string(), sample_buf);
+    }
     fn match_text(haystack: &str) -> Option<Captures> {
         // TODO parameterize with more cases
         AliasList::get_regex().captures(haystack)
@@ -152,4 +166,3 @@ mod test_alias_list {
         assert_eq!(sample_aliases.add_alias(alias), None);
     }
 }
-
