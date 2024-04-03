@@ -1,5 +1,6 @@
 // Rustc lints
 #![forbid(unsafe_code)]
+#![allow(dead_code)]
 // Clippy lints
 #![warn(clippy::pedantic)]
 #![deny(

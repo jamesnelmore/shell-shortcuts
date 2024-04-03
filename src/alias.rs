@@ -5,7 +5,6 @@ pub struct Alias {
 }
 
 impl Alias {
-
     // Public Interface
 
     pub fn new<S>(shortcut: S, command: S) -> Alias
@@ -23,13 +22,10 @@ impl Alias {
     }
 
     pub fn set_shortcut(&mut self, new_shortcut: String) -> Option<()> {
-        match Alias::is_valid_shortcut(new_shortcut.as_str()) {
-            true => {
-                self.shortcut = new_shortcut;
-                Some(())
-            }
-            false => None,
+        if Alias::is_valid_shortcut(new_shortcut.as_str()) {
+            self.shortcut = new_shortcut;
         }
+        None
     }
 
     pub fn command(&self) -> &String {
@@ -37,25 +33,23 @@ impl Alias {
     }
 
     pub fn set_command(&mut self, new_command: String) -> Option<()> {
-        
-        match Alias::is_valid_command(new_command.as_str()) {
-            true => {
-                self.command = new_command;
-                Some(())
-            }
-            false => None,
+        if Alias::is_valid_command(new_command.as_str()) {
+            self.command = new_command;
         }
-
+        None
     }
 
     // Helper Methods
 
     fn is_valid_shortcut(shortcut: &str) -> bool {
-        todo!("Need to know if shortcut can have spaces or nonword characters.")
+        // TODO improve
+        !(shortcut.contains(' ') || shortcut.contains('\t') || shortcut.contains('\n'))
+            && shortcut.is_ascii()
     }
 
     fn is_valid_command(command: &str) -> bool {
-        todo!("Need to look up spec for valid shell command")
+        // TODO improve
+        command.is_ascii()
     }
 }
 
