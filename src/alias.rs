@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Debug, PartialEq)]
 pub struct Alias {
     shortcut: String,
@@ -53,6 +55,17 @@ impl Alias {
     }
 }
 
+impl fmt::Display for Alias {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "alias {}=\"{}\"",
+            self.shortcut.as_str(),
+            self.command.as_str()
+        )
+    }
+}
+
 #[cfg(test)]
 mod test_alias {
     use super::*;
@@ -83,5 +96,13 @@ mod test_alias {
     #[case::empty_quotes("\"\"", false)]
     fn shortcut_with_spaces(#[case] potential_shortcut: &str, #[case] is_valid: bool) {
         assert_eq!(Alias::is_valid_shortcut(potential_shortcut), is_valid);
+    }
+
+    #[rstest]
+    fn display_alias() {
+        assert_eq!(
+            Alias::new("Foo", "Bar").to_string(),
+            "alias Foo=\"Bar\"".to_string()
+        );
     }
 }
