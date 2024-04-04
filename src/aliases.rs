@@ -57,6 +57,10 @@ impl AliasList {
 
         AliasList { aliases }
     }
+
+    pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
+        self.aliases.iter()
+    }
 }
 
 impl Display for AliasList {
@@ -71,12 +75,6 @@ impl Display for AliasList {
         write!(f, "{}", display + "\n")
     }
 }
-
-// todo!("Write iterator for AliasList");
-// Impl std::Iter for AliasList {
-//     type Alias;
-//     fn next(&mut self) -> Option<Self::Item
-// }
 
 #[cfg(test)]
 mod test_alias_list {
@@ -104,6 +102,23 @@ mod test_alias_list {
                 Alias::new("thing", "Do this"),
                 Alias::new("gs", "git status"),
             ],
+        }
+    }
+
+    #[rstest]
+    fn iterator_works(sample_aliases: AliasList) {
+        let expected_aliases = vec![
+            Alias::new("scut", "cmd"),
+            Alias::new("thing", "Do this"),
+            Alias::new("gs", "git status"),
+        ];
+        assert_eq!(expected_aliases, sample_aliases.aliases); // Ensure conditions for test are
+        // valid. TODO refactor so this is not necessary. 
+
+        let mut iter = sample_aliases.iter();
+
+        for alias in &expected_aliases {
+            assert_eq!(alias, iter.next().unwrap());
         }
     }
 
