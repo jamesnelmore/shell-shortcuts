@@ -5,11 +5,12 @@ use std::path::PathBuf;
 
 use crate::alias::Alias;
 
+mod display;
 mod tests;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
-    pub aliases: Vec<Alias>
+    pub aliases: Vec<Alias>,
 }
 
 impl AliasList {
@@ -32,16 +33,16 @@ impl AliasList {
         Some(())
     }
 
-    const REGEX_STRING: &'static str = concat!(
-        r"^(?:alias )",            // Lookbehind matching "alias " at start of line
-        r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
-        r#"(?: ?= ?")"#,           // Matches but does not capture "="
-        r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
-    );
-
     fn get_regex() -> Regex {
+        const REGEX_STRING: &str = concat!(
+            r"^(?:alias )",            // Lookbehind matching "alias " at start of line
+            r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
+            r#"(?: ?= ?")"#,           // Matches but does not capture "="
+            r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
+        );
+
         #[allow(clippy::unwrap_used)]
-        RegexBuilder::new(AliasList::REGEX_STRING)
+        RegexBuilder::new(REGEX_STRING)
             .multi_line(true)
             .build()
             .unwrap()
@@ -66,15 +67,5 @@ impl AliasList {
     }
 }
 
-impl Display for AliasList {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let display = self
-            .aliases
-            .iter()
-            .map(std::string::ToString::to_string)
-            .collect::<Vec<String>>()
-            .join("\n");
 
-        write!(f, "{}", display + "\n")
-    }
-}
+
