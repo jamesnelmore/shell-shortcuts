@@ -1,12 +1,13 @@
 use regex::{Regex, RegexBuilder};
 use std::fmt;
 use std::fmt::Display;
+use std::path::PathBuf;
 
 use crate::alias::Alias;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
-    pub aliases: Vec<Alias>,
+    pub aliases: Vec<Alias>
 }
 
 impl AliasList {
@@ -113,7 +114,7 @@ mod test_alias_list {
             Alias::new("gs", "git status"),
         ];
         assert_eq!(expected_aliases, sample_aliases.aliases); // Ensure conditions for test are
-        // valid. TODO refactor so this is not necessary. 
+                                                              // valid. TODO refactor so this is not necessary.
 
         let mut iter = sample_aliases.iter();
 

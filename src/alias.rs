@@ -42,10 +42,15 @@ impl Alias {
     }
 
     // Helper Methods
+    // TODO move helper methods and associated tests to own module
+    // TODO Make test module with sharable fixtures
 
     fn is_valid_shortcut(shortcut: &str) -> bool {
-        // TODO improve
-        !(shortcut.contains(' ') || shortcut.contains('\t') || shortcut.contains('\n'))
+        // TODO improve readability and extensibility
+        !(shortcut.contains(' ')
+            || shortcut.contains('\t')
+            || shortcut.contains('\n')
+            || shortcut.contains('"'))
             && shortcut.is_ascii()
     }
 
@@ -78,6 +83,7 @@ mod test_alias {
 
         let alias1 = Alias::new(shortcut, command);
         let alias2 = Alias::new(shortcut, command);
+
         assert_eq!(alias1, alias2);
     }
 

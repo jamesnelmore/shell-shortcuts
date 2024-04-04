@@ -10,8 +10,10 @@ mod alias;
 mod aliases;
 mod interface;
 
-use interface::{Interface, Commands};
+use aliases::AliasList;
 use clap::Parser;
+use interface::{Commands, Interface};
+use std::{path, path::PathBuf, str::FromStr};
 
 // Plan
 // Initialize AliasList
@@ -19,14 +21,13 @@ use clap::Parser;
 // - Parse alias file for AliasList
 // Execute user command with given AliasList
 
-
 fn main() {
     let interface = Interface::parse();
     match &interface.command {
-        Commands::Add { .. } => {
-            todo!("implement adding aliases")
+        Commands::Add { shortcut, command } => {
+            todo!("Add {shortcut}=\"{command}\"")
         }
-        Commands::Remove { .. }=> {
+        Commands::Remove { .. } => {
             todo!("implement removing aliases")
         }
         Commands::Replace => {
@@ -36,4 +37,9 @@ fn main() {
             todo!("implement listing aliases")
         }
     };
+}
+
+fn path() -> PathBuf {
+    // TODO check settings 
+    ["~", ".aliases"].iter().collect()
 }
