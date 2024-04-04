@@ -1,4 +1,5 @@
-use std::fmt;
+mod display;
+mod tests;
 
 #[derive(Debug, PartialEq)]
 pub struct Alias {
@@ -59,15 +60,3 @@ impl Alias {
         command.is_ascii()
     }
 }
-
-impl fmt::Display for Alias {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "alias {}=\"{}\"",
-            self.shortcut.as_str(),
-            self.command.as_str()
-        )
-    }
-}
-
