@@ -1,12 +1,9 @@
 use regex::{Regex, RegexBuilder};
 
-
-
-
 use crate::alias::Alias;
 
 mod display;
-mod tests;
+mod regex_tests;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
@@ -66,5 +63,61 @@ impl AliasList {
 
     pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
         self.aliases.iter()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use indoc::indoc;
+    use regex::Captures;
+    use rstest::{fixture, rstest};
+
+    #[fixture]
+    fn sample_buf() -> &'static str {
+        // TODO parameterize with more cases
+        indoc! {r#"
+          alias scut="cmd"
+          alias thing="Do this"
+          alias gs="git status"
+        "#}
+    }
+
+    #[fixture]
+    fn sample_aliases() -> AliasList {
+        // TODO parameterize with more cases
+        AliasList {
+            aliases: vec![
+                Alias::new("scut", "cmd").unwrap(),
+                Alias::new("thing", "Do this").unwrap(),
+                Alias::new("gs", "git status").unwrap(),
+            ],
+        }
+    }
+
+    #[rstest]
+    fn iterator_works(sample_aliases: AliasList) {
+        let expected_aliases = vec![
+            Alias::new("scut", "cmd").unwrap(),
+            Alias::new("thing", "Do this").unwrap(),
+            Alias::new("gs", "git status").unwrap(),
+        ];
+        assert_eq!(expected_aliases, sample_aliases.aliases); // Ensure conditions for test are
+                                                              // valid. TODO refactor so this is not necessary.
+
+        let mut iter = sample_aliases.iter();
+
+        for alias in &expected_aliases {
+            assert_eq!(alias, iter.next().unwrap());
+        }
+    }
+
+    #[rstest]
+    fn display_aliases(sample_aliases: AliasList, sample_buf: &str) {
+        assert_eq!(sample_aliases.to_string(), sample_buf);
+    }
+    fn match_text(haystack: &str) -> Option<Captures> {
+        // TODO parameterize with more cases
+        AliasList::get_regex().captures(haystack)
     }
 }

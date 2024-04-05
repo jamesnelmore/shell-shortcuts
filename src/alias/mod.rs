@@ -1,5 +1,4 @@
 mod display;
-mod tests;
 
 #[derive(Debug, PartialEq)]
 pub struct Alias {
@@ -78,4 +77,41 @@ fn is_valid_shortcut(shortcut: &str) -> bool {
 fn is_valid_command(command: &str) -> bool {
     // TODO improve
     command.is_ascii()
+}
+
+#[cfg(test)]
+mod test {
+    use crate::alias::{is_valid_shortcut, Alias};
+    use rstest::rstest;
+
+    #[rstest]
+    fn simple_equality() {
+        let shortcut = "Foo";
+        let command = "Bar";
+
+        let alias1 = Alias::new(shortcut, command);
+        let alias2 = Alias::new(shortcut, command);
+
+        assert_eq!(alias1, alias2);
+    }
+
+    #[rstest]
+    fn simple_inequality() {
+        assert_ne!(
+            Alias::new("Foo", "Bar").unwrap(),
+            Alias::new("Baz", "Bor").unwrap()
+        );
+    }
+
+    #[rstest]
+    #[case::single_word("hello", true)]
+    #[case::two_words("foo bar", false)]
+    #[case::numbers("foo3", true)]
+    #[case::starting_number("3foo", true)]
+    #[case::tab("\tthing", false)]
+    #[case::quotes("\"this_is_in_quotes\"", false)]
+    #[case::empty_quotes("\"\"", false)]
+    fn shortcut_with_spaces(#[case] potential_shortcut: &str, #[case] is_valid: bool) {
+        assert_eq!(is_valid_shortcut(potential_shortcut), is_valid);
+    }
 }
