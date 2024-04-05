@@ -1,7 +1,6 @@
-use super::*;
-use rstest::{fixture, rstest};
-
-#[cfg(test)]
+#![cfg(test)]
+use crate::alias::{Alias, is_valid_shortcut};
+use rstest::rstest;
 
 #[rstest]
 fn simple_equality() {
@@ -28,13 +27,13 @@ fn simple_inequality() {
 #[case::quotes("\"this_is_in_quotes\"", false)]
 #[case::empty_quotes("\"\"", false)]
 fn shortcut_with_spaces(#[case] potential_shortcut: &str, #[case] is_valid: bool) {
-    assert_eq!(Alias::is_valid_shortcut(potential_shortcut), is_valid);
+    assert_eq!(is_valid_shortcut(potential_shortcut), is_valid);
 }
 
 #[rstest]
 fn display_alias() {
     assert_eq!(
-        Alias::new("Foo", "Bar").to_string(),
+        Alias::new("Foo", "Bar").unwrap().to_string(),
         "alias Foo=\"Bar\"".to_string()
     );
 }

@@ -57,6 +57,8 @@ impl AliasList {
                 println!("Captured: {shortcut} | {command}");
                 Alias::new(shortcut, command)
             })
+            .filter(Result::is_ok)
+            .map(Result::unwrap)
             .collect::<Vec<Alias>>();
 
         AliasList { aliases }
@@ -66,6 +68,3 @@ impl AliasList {
         self.aliases.iter()
     }
 }
-
-
-

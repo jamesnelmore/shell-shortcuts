@@ -1,9 +1,9 @@
+#![cfg(test)]
 use super::*;
 use indoc::indoc;
 use regex::Captures;
 use rstest::{fixture, rstest};
 
-#[cfg(test)]
 
 #[fixture]
 fn sample_buf() -> &'static str {
@@ -20,9 +20,9 @@ fn sample_aliases() -> AliasList {
     // TODO parameterize with more cases
     AliasList {
         aliases: vec![
-            Alias::new("scut", "cmd"),
-            Alias::new("thing", "Do this"),
-            Alias::new("gs", "git status"),
+            Alias::new("scut", "cmd").unwrap(),
+            Alias::new("thing", "Do this").unwrap(),
+            Alias::new("gs", "git status").unwrap(),
         ],
     }
 }
@@ -30,9 +30,9 @@ fn sample_aliases() -> AliasList {
 #[rstest]
 fn iterator_works(sample_aliases: AliasList) {
     let expected_aliases = vec![
-        Alias::new("scut", "cmd"),
-        Alias::new("thing", "Do this"),
-        Alias::new("gs", "git status"),
+        Alias::new("scut", "cmd").unwrap(),
+        Alias::new("thing", "Do this").unwrap(),
+        Alias::new("gs", "git status").unwrap(),
     ];
     assert_eq!(expected_aliases, sample_aliases.aliases); // Ensure conditions for test are
                                                           // valid. TODO refactor so this is not necessary.
@@ -87,14 +87,14 @@ fn add_alias_happy_path() {
     // TODO parameterize by empty and nonempty lists
 
     let mut aliases = AliasList::new();
-    aliases.add_alias(Alias::new("gs", "git status")).unwrap();
-    assert_eq!(aliases.aliases, vec![Alias::new("gs", "git status")]);
+    aliases.add_alias(Alias::new("gs", "git status").unwrap());
+    assert_eq!(aliases.aliases, vec![Alias::new("gs", "git status").unwrap()]);
 }
 
 #[rstest]
 fn add_alias_duplicate(mut sample_aliases: AliasList) {
     // TODO parameterize with more cases
-    let alias = Alias::new("gs", "git status");
+    let alias = Alias::new("gs", "git status").unwrap();
     assert!(
         sample_aliases.aliases.contains(&alias),
         "Test conditions not met. Ensure `alias` is in `sample_buf_aliases`."
