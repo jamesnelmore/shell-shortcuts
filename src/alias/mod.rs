@@ -36,7 +36,7 @@ impl Alias {
 
         // TODO implement and test for case InvalidShortcutAndCommand
 
-        return Ok(Alias { shortcut, command });
+        Ok(Alias { shortcut, command })
     }
 
     pub fn shortcut(&self) -> &String {

@@ -10,10 +10,10 @@ mod alias;
 mod aliases;
 mod interface;
 
-use aliases::AliasList;
+
 use clap::Parser;
 use interface::{Commands, Interface};
-use std::{path, path::PathBuf, str::FromStr};
+use std::{path::PathBuf};
 
 // Plan
 // Initialize AliasList
