@@ -11,8 +11,6 @@ pub struct Interface {
 pub enum Commands {
     Add { shortcut: String, command: String },
     Remove { shortcut: String },
-    Replace,
+    Replace { old_shortcut: String, new_shortcut: String },
     List,
 }
-
- 

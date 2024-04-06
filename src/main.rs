@@ -5,14 +5,17 @@ mod interface;
 use clap::Parser;
 use interface::{Commands, Interface};
 use std::path::PathBuf;
+use std::error::Error;
 
+use aliases::{AliasList, AliasFile};
 // Plan
 // Initialize AliasList
 // - Check environment variables for path to alias file
 // - Parse alias file for AliasList
 // Execute user command with given AliasList
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>>{
+    let mut alias_file = AliasFile::new(alias_path());
     let interface = Interface::parse();
     match &interface.command {
         Commands::Add { shortcut, command } => {
@@ -28,9 +31,12 @@ fn main() {
             todo!("implement replacement")
         }
         Commands::List => {
-            todo!("implement listing aliases")
+            let display = alias_file?.aliases().to_string();
+            println!("{display}");
         }
     };
+
+    Ok(())
 }
 
 fn alias_path() -> PathBuf {
