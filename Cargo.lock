@@ -290,7 +290,7 @@ checksum = "92d43fe69e652f3df9bdc2b85b2854a0825b86e4fb76bc44d945137d053639ca"
 
 [[package]]
 name = "shell-shortcuts"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "clap",
  "indoc",

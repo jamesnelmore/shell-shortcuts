@@ -1,7 +1,12 @@
 [package]
 name = "shell-shortcuts"
-version = "0.1.0"
 edition = "2021"
+description = "Command line manager for shell aliases."
+license = "MIT OR Apache-2.0"
+authors = ["James Elmore"]
+readme = "README.md"
+publish = false
+repository = "https://github.com/jamesnelmore/shell-shortcuts"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
