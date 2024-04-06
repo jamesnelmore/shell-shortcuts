@@ -3,7 +3,10 @@ use regex::{Regex, RegexBuilder};
 use crate::alias::Alias;
 
 mod display;
+mod file_io;
 mod regex_tests;
+
+pub use file_io::AliasFile;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
