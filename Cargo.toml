@@ -17,3 +17,27 @@ regex = "1.10.3"
 indoc = "2.0.4"
 rstest = {version="0.18.2", default-features=false}
 tempdir = "0.3.7"
+
+# TODO change closer to release
+[lints.rust]
+unsafe_code = "forbid"
+dead_code = "allow" 
+
+[lints.clippy]
+pedantic = "warn"
+enum_glob_use = "deny"
+unwrap_used = "warn"
+expect_used = "warn"
+cargo = "warn"
+allow_attributes = "deny"
+allow_attributes_without_reason = "warn"
+as_underscore = "warn"
+derive_partial_eq_without_eq = "warn"
+else_if_without_else = "deny"
+doc_link_with_quotes = "warn"
+doc_markdown = "warn"
+if_then_some_else_none = "warn"
+
+# TODO set unwrap/expect used lints for release builds
+# [build]
+# rustflags = ["-Dclippy::unwrap_used", "-Dclippy::expect_used"]

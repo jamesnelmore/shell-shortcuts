@@ -1,19 +1,10 @@
-// Rustc lints
-#![forbid(unsafe_code)]
-#![allow(dead_code)]
-// Clippy lints
-#![warn(clippy::pedantic)]
-#![deny(
-    clippy::enum_glob_use, /*clippy::unwrap_used*/)]
-
 mod alias;
 mod aliases;
 mod interface;
 
-
 use clap::Parser;
 use interface::{Commands, Interface};
-use std::{path::PathBuf};
+use std::path::PathBuf;
 
 // Plan
 // Initialize AliasList
@@ -30,7 +21,10 @@ fn main() {
         Commands::Remove { .. } => {
             todo!("implement removing aliases")
         }
-        Commands::Replace => {
+        Commands::Replace {
+            old_shortcut,
+            new_shortcut,
+        } => {
             todo!("implement replacement")
         }
         Commands::List => {
@@ -39,7 +33,7 @@ fn main() {
     };
 }
 
-fn path() -> PathBuf {
-    // TODO check settings 
+fn alias_path() -> PathBuf {
+    // TODO check environment variable for aliases
     ["~", ".aliases"].iter().collect()
 }
