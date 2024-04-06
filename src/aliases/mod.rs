@@ -48,9 +48,19 @@ impl AliasList {
             .unwrap()
     }
 
-    pub fn aliases_from_buf(buf: &str) -> AliasList {
+
+    pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
+        self.aliases.iter()
+    }
+}
+
+impl From<&str> for AliasList {
+    /// Will always return an AliasList, but it might be empty
+    fn from(value: &str) -> AliasList { // TODO consider returning error
+        // TODO write errors
+
         let aliases = Self::get_regex()
-            .captures_iter(buf)
+            .captures_iter(value)
             .map(|capture| {
                 let shortcut = &capture["shortcut"].to_string();
                 let command = &capture["command"].to_string();
@@ -62,10 +72,6 @@ impl AliasList {
             .collect::<Vec<Alias>>();
 
         AliasList { aliases }
-    }
-
-    pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
-        self.aliases.iter()
     }
 }
 

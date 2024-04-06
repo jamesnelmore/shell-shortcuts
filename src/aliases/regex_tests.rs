@@ -79,7 +79,7 @@ fn parse_regex_spaces_around_equals() {
 #[rstest]
 fn aliases_from_buf_happy_path(sample_buf: &str, sample_aliases: AliasList) {
     // TODO parameterize with more cases
-    assert_eq!(AliasList::aliases_from_buf(sample_buf), sample_aliases);
+    assert_eq!(AliasList::from(sample_buf), sample_aliases);
 }
 
 #[rstest]
