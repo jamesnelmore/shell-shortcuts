@@ -1,5 +1,5 @@
-use regex::{Regex, RegexBuilder};
-use std::path::Path;
+
+
 
 use crate::alias::Alias;
 
@@ -40,16 +40,6 @@ impl AliasList {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct AliasError;
-// TODO merge AliasError and AliasParseError
-impl std::error::Error for AliasError {}
-
-impl std::fmt::Display for AliasError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "This is an error") // TODO improve
-    }
-}
 
 #[cfg(test)]
 mod test {

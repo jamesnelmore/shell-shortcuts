@@ -1,32 +1,34 @@
-use std::path::PathBuf;
-use regex::{Regex, RegexBuilder};
 use crate::alias::Alias;
-use crate::alias_list::{AliasError, AliasList};
+use crate::alias_list::AliasList;
+use crate::Error;
+use regex::{Regex, RegexBuilder};
+use std::path::PathBuf;
 
 const REGEX_STRING: &str = concat!(
-r"^(?:alias )",            // Lookbehind matching "alias " at start of line
-r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
-r#"(?: ?= ?")"#,           // Matches but does not capture "="
-r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
+    r"^(?:alias )",            // Lookbehind matching "alias " at start of line
+    r"(?<shortcut>\S+)",       // Matches text after "alias " under "="
+    r#"(?: ?= ?")"#,           // Matches but does not capture "="
+    r#"(?<command>.+)(?:")$"#, // Matches all text between quotes and end of line
 );
 
-
 fn regex() -> Regex {
+    #[allow(clippy::unwrap_used)] // REASON: REGEX is deterministic and cannot fail
     RegexBuilder::new(REGEX_STRING)
-    .multi_line(true)
-    .build()
-    .unwrap()}
+        .multi_line(true)
+        .build()
+        .unwrap()
+}
 
 impl TryFrom<PathBuf> for AliasList {
-    type Error = AliasError;
-    fn try_from(value: PathBuf) -> Result<Self, AliasError> {
-        let buffer = std::fs::read_to_string(value).map_err(|_err| AliasError)?;
+    type Error = Error;
+    fn try_from(value: PathBuf) -> Result<Self, Error> {
+        let buffer = std::fs::read_to_string(value).map_err(Error::IOError)?;
         AliasList::try_from(buffer.as_str())
     }
 }
 
 impl TryFrom<&str> for AliasList {
-    type Error = AliasError;
+    type Error = Error;
     fn try_from(value: &str) -> Result<AliasList, Self::Error> {
         // TODO consider returning error
         // TODO write errors
@@ -39,24 +41,24 @@ impl TryFrom<&str> for AliasList {
                 println!("Captured: {shortcut} | {command}");
                 Alias::new(shortcut, command)
             })
-            .filter(Result::is_ok)
-            .map(Result::unwrap)
+            .flatten()
             .collect::<Vec<Alias>>();
 
-        if aliases.len() == 0 {
-            return Err(AliasError);
+        if aliases.is_empty() {
+            Err(Self::Error::InvalidString)
+        } else {
+            Ok(AliasList { aliases })
         }
-        Ok(AliasList { aliases })
     }
 }
 
 #[cfg(test)]
 mod test {
-    use regex::Captures;
-    use crate::alias_list::AliasList;
-    use rstest::rstest;
-    use crate::alias::Alias;
     use super::super::test_fixtures::*;
+    use crate::alias::Alias;
+    use crate::alias_list::AliasList;
+    use regex::Captures;
+    use rstest::rstest;
 
     // TODO write tests
 
@@ -65,7 +67,7 @@ mod test {
         super::regex().captures(haystack)
     }
 
-// Test Regular Expression
+    // Test Regular Expression
 
     #[rstest]
     fn parse_regex_single_example() {
@@ -122,3 +124,4 @@ mod test {
         assert_eq!(sample_aliases.add_alias(alias), None);
     }
 }
+

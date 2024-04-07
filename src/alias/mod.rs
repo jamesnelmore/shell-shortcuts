@@ -1,18 +1,19 @@
 mod display;
 mod validation;
 mod test_fixtures;
+use crate::{Error};
 
-use std::fmt::Formatter;
+
 use validation::{is_valid_shortcut, is_valid_command};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Alias {
     shortcut: String,
     command: String,
 }
 
 impl Alias { // Public Interface
-    pub fn new<S>(shortcut: S, command: S) -> Result<Alias, AliasParseError>
+    pub fn new<S>(shortcut: S, command: S) -> Result<Alias, Error>
     where
         S: Into<String>,
     {
@@ -20,11 +21,11 @@ impl Alias { // Public Interface
         let command = command.into();
 
         if !is_valid_shortcut(&shortcut) {
-            return Err(AliasParseError::InvalidShortcut);
+            return Err(Error::InvalidShortcut);
         }
 
         if !is_valid_command(&command) {
-            return Err(AliasParseError::InvalidCommand);
+            return Err(Error::InvalidCommand);
         }
 
         // TODO implement and test for case InvalidShortcutAndCommand
@@ -58,25 +59,6 @@ impl Alias { // Public Interface
         None
     }
 }
-
-#[allow(clippy::enum_variant_names, clippy::module_name_repetitions)]
-// TODO See if implementing error fixes this, else rename to
-// be valid
-#[derive(Debug, PartialEq)]
-pub enum AliasParseError {
-    InvalidShortcut,
-    InvalidCommand,
-    InvalidShortcutAndCommand,
-} // TODO test for failing parses
-
-impl std::error::Error for AliasParseError {}
-
-impl std::fmt::Display for AliasParseError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Ok(()) // TODO actually implement
-    }
-}
-
 
 #[cfg(test)]
 mod test {

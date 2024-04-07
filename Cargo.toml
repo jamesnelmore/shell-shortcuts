@@ -17,6 +17,7 @@ lto = "fat"
 [dependencies]
 clap = { version = "4.5.1", features = ["derive"] }
 regex = "1.10.3"
+thiserror = "1.0.58"
 
 [dev-dependencies]
 indoc = "2.0.4"
@@ -36,7 +37,7 @@ unwrap_used = "warn"
 expect_used = "warn"
 cargo = "warn"
 allow_attributes = "deny"
-allow_attributes_without_reason = "warn"
+allow_attributes_without_reason = "deny"
 as_underscore = "warn"
 derive_partial_eq_without_eq = "warn"
 else_if_without_else = "deny"
