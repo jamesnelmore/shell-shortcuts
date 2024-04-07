@@ -1,12 +1,10 @@
 use regex::{Regex, RegexBuilder};
+use std::path::Path;
 
 use crate::alias::Alias;
 
 mod display;
-mod file_io;
 mod regex_tests;
-
-pub use file_io::AliasFile;
 
 #[derive(Debug, PartialEq)]
 pub struct AliasList {
@@ -48,15 +46,31 @@ impl AliasList {
             .unwrap()
     }
 
-
     pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
         self.aliases.iter()
     }
+
+    pub fn new_from_path(value: &Path) -> Result<Self, AliasError> {
+        let buffer = std::fs::read_to_string(value).map_err(|_err| AliasError)?;
+        AliasList::try_from(buffer.as_str())
+    }
 }
 
-impl From<&str> for AliasList {
-    /// Will always return an AliasList, but it might be empty
-    fn from(value: &str) -> AliasList { // TODO consider returning error
+#[derive(Debug, Clone)]
+pub struct AliasError;
+
+impl std::error::Error for AliasError {}
+
+impl std::fmt::Display for AliasError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "This is an error") // TODO improve
+    }
+}
+
+impl TryFrom<&str> for AliasList {
+    type Error = AliasError;
+    fn try_from(value: &str) -> Result<AliasList, Self::Error> {
+        // TODO consider returning error
         // TODO write errors
 
         let aliases = Self::get_regex()
@@ -71,7 +85,10 @@ impl From<&str> for AliasList {
             .map(Result::unwrap)
             .collect::<Vec<Alias>>();
 
-        AliasList { aliases }
+        if aliases.len() == 0 {
+            return Err(AliasError);
+        }
+        Ok(AliasList { aliases })
     }
 }
 

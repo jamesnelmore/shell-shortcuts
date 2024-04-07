@@ -77,9 +77,10 @@ fn parse_regex_spaces_around_equals() {
 }
 
 #[rstest]
-fn aliases_from_buf_happy_path(sample_buf: &str, sample_aliases: AliasList) {
+fn aliases_from_buf_happy_path(sample_buf: &str, sample_aliases: AliasList) -> Result<(), Box<dyn std::error::Error + 'static>>{
     // TODO parameterize with more cases
-    assert_eq!(AliasList::from(sample_buf), sample_aliases);
+    assert_eq!(AliasList::try_from(sample_buf)?, sample_aliases);
+    Ok(())
 }
 
 #[rstest]

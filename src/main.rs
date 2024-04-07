@@ -3,7 +3,7 @@ mod aliases;
 mod interface;
 
 use alias::Alias;
-use aliases::{AliasFile, AliasList};
+use aliases::AliasList;
 use clap::Parser;
 use interface::{Commands, Interface};
 use std::error::Error;
@@ -15,20 +15,23 @@ use std::path::PathBuf;
 // Execute user command with given AliasList
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut alias_file = AliasFile::new(alias_path())?;
+    let mut aliases: AliasList = AliasList::new_from_path(&alias_path())?;
     let interface = Interface::parse();
     match &interface.command {
         Commands::Add { shortcut, command } => {
-            let alias: Alias = Alias::new(shortcut, command).or_else(|_| {
+            #[allow(clippy::bind_instead_of_map)] // TODO fix error
+            let alias: Alias = Alias::new(shortcut, command).or_else(|_| -> Result<Alias, Box<dyn Error>> {
                 println!("Invalid input");
                 todo!("Graceful error handling for invalid aliases");
             })?;
-            alias_file.aliases().add_alias(alias);
+            aliases.add_alias(alias);
             todo!("Save file")
         }
         Commands::Remove { .. } => {
             todo!("implement removing aliases")
         }
+
+        #[allow(unused_variables)] // Only until implemented
         Commands::Replace {
             old_shortcut,
             new_shortcut,
@@ -36,15 +39,15 @@ fn main() -> Result<(), Box<dyn Error>> {
             todo!("implement replacement")
         }
         Commands::List => {
-            let display = alias_file.aliases().to_string();
-            println!("{display}");
+            let display = aliases.to_string();
+            println!("List: {display}");
         }
-    };
+    }; // TODO aliases should be scannable with single quotes
 
     Ok(())
 }
 
 fn alias_path() -> PathBuf {
     // TODO check environment variable for aliases
-    ["~", ".aliases"].iter().collect()
+    PathBuf::from("/Users/jelmore/.aliases")
 }

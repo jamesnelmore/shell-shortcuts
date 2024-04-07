@@ -27,7 +27,8 @@ tempdir = "0.3.7"
 [lints.rust]
 unsafe_code = "forbid"
 dead_code = "allow" 
-
+unsafe_op_in_unsafe_fn = "forbid"
+ 
 [lints.clippy]
 pedantic = "warn"
 enum_glob_use = "deny"
