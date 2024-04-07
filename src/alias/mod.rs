@@ -1,4 +1,9 @@
 mod display;
+mod validation;
+mod test_fixtures;
+
+use std::fmt::Formatter;
+use validation::{is_valid_shortcut, is_valid_command};
 
 #[derive(Debug, PartialEq)]
 pub struct Alias {
@@ -6,18 +11,7 @@ pub struct Alias {
     command: String,
 }
 
-#[allow(clippy::enum_variant_names, clippy::module_name_repetitions)] // TODO See if implementing error fixes this, else rename to
-// be valid
-#[derive(Debug, PartialEq)]
-pub enum AliasParseError {
-    InvalidShortcut,
-    InvalidCommand,
-    InvalidShortcutAndCommand,
-}
-
-impl Alias {
-    // Public Interface
-
+impl Alias { // Public Interface
     pub fn new<S>(shortcut: S, command: S) -> Result<Alias, AliasParseError>
     where
         S: Into<String>,
@@ -42,6 +36,8 @@ impl Alias {
         &self.shortcut
     }
 
+    // TODO test set_shorcut with valid and invalid commands
+    // TODO change set_shortcut to return Result
     pub fn set_shortcut(&mut self, new_shortcut: String) -> Option<()> {
         if is_valid_shortcut(new_shortcut.as_str()) {
             self.shortcut = new_shortcut;
@@ -53,6 +49,8 @@ impl Alias {
         &self.command
     }
 
+    // TODO test set_command with valid and invalid commands
+    // TODO change set_command to return Result
     pub fn set_command(&mut self, new_command: String) -> Option<()> {
         if is_valid_command(new_command.as_str()) {
             self.command = new_command;
@@ -61,23 +59,24 @@ impl Alias {
     }
 }
 
-// Helper Methods
-// TODO move helper methods and associated tests to own module
-// TODO Make test module with sharable fixtures
+#[allow(clippy::enum_variant_names, clippy::module_name_repetitions)]
+// TODO See if implementing error fixes this, else rename to
+// be valid
+#[derive(Debug, PartialEq)]
+pub enum AliasParseError {
+    InvalidShortcut,
+    InvalidCommand,
+    InvalidShortcutAndCommand,
+} // TODO test for failing parses
 
-fn is_valid_shortcut(shortcut: &str) -> bool {
-    // TODO improve readability and extensibility
-    !(shortcut.contains(' ')
-        || shortcut.contains('\t')
-        || shortcut.contains('\n')
-        || shortcut.contains('"'))
-        && shortcut.is_ascii()
+impl std::error::Error for AliasParseError {}
+
+impl std::fmt::Display for AliasParseError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Ok(()) // TODO actually implement
+    }
 }
 
-fn is_valid_command(command: &str) -> bool {
-    // TODO improve
-    command.is_ascii()
-}
 
 #[cfg(test)]
 mod test {
@@ -101,17 +100,5 @@ mod test {
             Alias::new("Foo", "Bar").unwrap(),
             Alias::new("Baz", "Bor").unwrap()
         );
-    }
-
-    #[rstest]
-    #[case::single_word("hello", true)]
-    #[case::two_words("foo bar", false)]
-    #[case::numbers("foo3", true)]
-    #[case::starting_number("3foo", true)]
-    #[case::tab("\tthing", false)]
-    #[case::quotes("\"this_is_in_quotes\"", false)]
-    #[case::empty_quotes("\"\"", false)]
-    fn shortcut_with_spaces(#[case] potential_shortcut: &str, #[case] is_valid: bool) {
-        assert_eq!(is_valid_shortcut(potential_shortcut), is_valid);
     }
 }

@@ -1,9 +1,9 @@
+mod alias_list;
 mod alias;
-mod aliases;
 mod interface;
 
 use alias::Alias;
-use aliases::AliasList;
+use alias_list::AliasList;
 use clap::Parser;
 use interface::{Commands, Interface};
 use std::error::Error;
@@ -15,7 +15,7 @@ use std::path::PathBuf;
 // Execute user command with given AliasList
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut aliases: AliasList = AliasList::new_from_path(&alias_path())?;
+    let mut aliases: AliasList = AliasList::try_from(alias_path())?;
     let interface = Interface::parse();
     match &interface.command {
         Commands::Add { shortcut, command } => {
