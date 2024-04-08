@@ -1,10 +1,8 @@
+use crate::{Alias, Error};
+use std::path::PathBuf;
 
-
-
-use crate::alias::Alias;
-
-mod display;
 mod creation;
+mod display;
 mod test_fixtures;
 
 #[derive(Debug, PartialEq)]
@@ -32,14 +30,38 @@ impl AliasList {
 
         Some(())
     }
-    
+
+    pub fn remove_alias_by_shortcut(&mut self, shortcut: &str) -> Result<(), Error> {
+        let old_index = self
+            .iter()
+            .position(|alias| alias.shortcut() == shortcut)
+            .ok_or(Error::InvalidShortcut)?;
+        self.aliases.remove(old_index);
+        Ok(())
+    }
+
+    pub fn replace_shortcut(&mut self, old: &str, new: String) -> Result<(), Error> {
+        let alias: &mut Alias = self
+            .iter_mut()
+            .find(|alias| alias.shortcut() == old)
+            .ok_or(Error::InvalidShortcut)?;
+        alias.set_shortcut(new)
+    }
+
+    pub fn save_to_file(&self, path: PathBuf) -> Result<(), Error> {
+        std::fs::write(path, self.to_string()).map_err(|err| Error::IOError(err))
+    }
+
     // TODO write remove and replace
 
     pub fn iter(&self) -> (impl Iterator<Item = &Alias> + '_) {
         self.aliases.iter()
     }
-}
 
+    pub fn iter_mut(&mut self) -> (impl Iterator<Item = &mut Alias> + '_) {
+        self.aliases.iter_mut()
+    }
+}
 
 #[cfg(test)]
 mod test {
@@ -47,7 +69,7 @@ mod test {
     use regex::Captures;
     use rstest::rstest;
     use test_fixtures::*;
-    
+
     // TODO test add_alias
 
     #[rstest]

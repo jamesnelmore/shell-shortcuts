@@ -39,11 +39,11 @@ impl Alias { // Public Interface
 
     // TODO test set_shorcut with valid and invalid commands
     // TODO change set_shortcut to return Result
-    pub fn set_shortcut(&mut self, new_shortcut: String) -> Option<()> {
+    pub fn set_shortcut(&mut self, new_shortcut: String) -> Result<(), Error> {
         if is_valid_shortcut(new_shortcut.as_str()) {
             self.shortcut = new_shortcut;
         }
-        None
+        Ok(())
     }
 
     pub fn command(&self) -> &String {
