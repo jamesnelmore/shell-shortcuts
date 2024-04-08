@@ -1,9 +1,9 @@
 #![cfg(test)]
 
-use indoc::indoc;
-use rstest::fixture;
 use crate::alias::Alias;
 use crate::alias_list::AliasList;
+use indoc::indoc;
+use rstest::fixture;
 
 // All fixtures must be public
 

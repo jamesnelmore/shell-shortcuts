@@ -124,4 +124,3 @@ mod test {
         assert_eq!(sample_aliases.add_alias(alias), None);
     }
 }
-

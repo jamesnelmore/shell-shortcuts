@@ -29,6 +29,6 @@ mod test {
         // TODO rename test
         assert_eq!(is_valid_shortcut(potential_shortcut), is_valid);
     }
-    
+
     // TODO test is_valid_command similarly
 }

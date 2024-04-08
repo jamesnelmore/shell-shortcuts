@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter, Result};
 use super::AliasList;
+use std::fmt::{Display, Formatter, Result};
 
 impl Display for AliasList {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -16,14 +16,14 @@ impl Display for AliasList {
 
 #[cfg(test)]
 mod test {
-    use rstest::rstest;
-    use crate::alias_list::AliasList;
     use super::super::test_fixtures::*;
+    use crate::alias_list::AliasList;
+    use rstest::rstest;
 
     #[rstest]
     fn display_aliases(sample_aliases: AliasList, sample_buf: &str) {
         assert_eq!(sample_aliases.to_string(), sample_buf);
     }
-    
+
     // TODO test if empty alias is valid (shouldn't be)
 }

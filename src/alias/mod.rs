@@ -1,10 +1,9 @@
 mod display;
-mod validation;
 mod test_fixtures;
-use crate::{Error};
+mod validation;
+use crate::Error;
 
-
-use validation::{is_valid_shortcut, is_valid_command};
+use validation::{is_valid_command, is_valid_shortcut};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Alias {
@@ -12,7 +11,8 @@ pub struct Alias {
     command: String,
 }
 
-impl Alias { // Public Interface
+impl Alias {
+    // Public Interface
     pub fn new<S>(shortcut: S, command: S) -> Result<Alias, Error>
     where
         S: Into<String>,
