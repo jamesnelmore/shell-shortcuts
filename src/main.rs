@@ -7,7 +7,7 @@ use alias::Alias;
 use alias_list::AliasList;
 use clap::Parser;
 pub use error::Error;
-use interface::{Commands, Interface};
+use interface::Interface;
 use std::path::PathBuf;
 // Plan
 // Initialize AliasList

@@ -5,7 +5,7 @@ mod creation;
 mod display;
 mod test_fixtures;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct AliasList {
     pub aliases: Vec<Alias>,
 }
@@ -49,7 +49,7 @@ impl AliasList {
     }
 
     pub fn save_to_file(&self, path: PathBuf) -> Result<(), Error> {
-        std::fs::write(path, self.to_string()).map_err(|err| Error::IOError(err))
+        std::fs::write(path, self.to_string()).map_err(Error::IOError)
     }
 
     // TODO write remove and replace
@@ -66,18 +66,18 @@ impl AliasList {
 #[cfg(test)]
 mod test {
     use super::*;
-    use regex::Captures;
+
     use rstest::rstest;
     use test_fixtures::*;
 
     // TODO test add_alias
 
     #[rstest]
-    fn iterator_works(sample_aliases: AliasList) {
+    fn iterator_works(sample_aliases: AliasList) -> Result<(), Error> {
         let expected_aliases = vec![
-            Alias::new("scut", "cmd").unwrap(),
-            Alias::new("thing", "Do this").unwrap(),
-            Alias::new("gs", "git status").unwrap(),
+            Alias::new("scut", "cmd")?,
+            Alias::new("thing", "Do this")?,
+            Alias::new("gs", "git status")?,
         ];
         assert_eq!(expected_aliases, sample_aliases.aliases); // Ensure conditions for test are
                                                               // valid. TODO refactor so this is not necessary.
@@ -85,7 +85,13 @@ mod test {
         let mut iter = sample_aliases.iter();
 
         for alias in &expected_aliases {
-            assert_eq!(alias, iter.next().unwrap());
+            #[allow(clippy::unwrap_used)] // Should not fail because length of expected_aliases
+            // should equal length of iterator
+            let next = iter.next().unwrap();
+            assert_eq!(alias, next);
         }
+        assert_eq!(iter.next(), None);
+
+        Ok(())
     }
 }

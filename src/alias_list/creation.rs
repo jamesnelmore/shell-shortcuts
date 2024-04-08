@@ -35,13 +35,12 @@ impl TryFrom<&str> for AliasList {
 
         let aliases = regex()
             .captures_iter(value)
-            .map(|capture| {
+            .flat_map(|capture| {
                 let shortcut = &capture["shortcut"].to_string();
                 let command = &capture["command"].to_string();
                 println!("Captured: {shortcut} | {command}");
                 Alias::new(shortcut, command)
             })
-            .flatten()
             .collect::<Vec<Alias>>();
 
         if aliases.is_empty() {
@@ -101,26 +100,22 @@ mod test {
     }
 
     #[rstest]
-    fn add_alias_happy_path() {
+    fn add_alias_happy_path(sample_alias: Alias) {
         // TODO parameterize by empty and nonempty lists
-
         let mut aliases = AliasList::new();
-        aliases.add_alias(Alias::new("gs", "git status").unwrap());
-        assert_eq!(
-            aliases.aliases,
-            vec![Alias::new("gs", "git status").unwrap()]
-        );
+
+        aliases.add_alias(sample_alias.clone());
+        assert!(aliases.aliases.contains(&sample_alias));
     }
 
     #[rstest]
-    fn add_alias_duplicate(mut sample_aliases: AliasList) {
+    fn add_alias_duplicate(mut sample_aliases: AliasList, sample_alias: Alias) {
         // TODO parameterize with more cases
-        let alias = Alias::new("gs", "git status").unwrap();
         assert!(
-            sample_aliases.aliases.contains(&alias),
+            sample_aliases.aliases.contains(&sample_alias),
             "Test conditions not met. Ensure `alias` is in `sample_buf_aliases`."
         );
 
-        assert_eq!(sample_aliases.add_alias(alias), None);
+        assert_eq!(sample_aliases.add_alias(sample_alias), None);
     }
 }

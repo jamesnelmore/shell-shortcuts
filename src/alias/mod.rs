@@ -42,8 +42,10 @@ impl Alias {
     pub fn set_shortcut(&mut self, new_shortcut: String) -> Result<(), Error> {
         if is_valid_shortcut(new_shortcut.as_str()) {
             self.shortcut = new_shortcut;
+            Ok(())
+        } else {
+            Err(Error::InvalidShortcut)
         }
-        Ok(())
     }
 
     pub fn command(&self) -> &String {
@@ -60,27 +62,39 @@ impl Alias {
     }
 }
 
+impl Clone for Alias {
+    fn clone(&self) -> Self {
+        Alias {
+            shortcut: self.shortcut().clone(),
+            command: self.command().clone(),
+        }
+        // TODO test
+    }
+}
+
 #[cfg(test)]
 mod test {
-    use crate::alias::{is_valid_shortcut, Alias};
+    use crate::alias::Alias;
+    use crate::Error;
     use rstest::rstest;
 
     #[rstest]
-    fn simple_equality() {
+    fn simple_equality() -> Result<(), Error> {
         let shortcut = "Foo";
         let command = "Bar";
 
-        let alias1 = Alias::new(shortcut, command);
-        let alias2 = Alias::new(shortcut, command);
+        let alias1 = Alias::new(shortcut, command)?;
+        let alias2 = Alias::new(shortcut, command)?;
 
         assert_eq!(alias1, alias2);
+
+        Ok(())
     }
 
     #[rstest]
-    fn simple_inequality() {
-        assert_ne!(
-            Alias::new("Foo", "Bar").unwrap(),
-            Alias::new("Baz", "Bor").unwrap()
-        );
+    fn simple_inequality() -> Result<(), Error> {
+        assert_ne!(Alias::new("Foo", "Bar")?, Alias::new("Baz", "Bor")?);
+
+        Ok(())
     }
 }

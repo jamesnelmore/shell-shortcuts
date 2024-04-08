@@ -19,10 +19,9 @@ mod test {
 
     #[rstest]
     fn display_alias() {
-        assert_eq!(
-            Alias::new("Foo", "Bar").unwrap().to_string(),
-            "alias Foo=\"Bar\"".to_string()
-        );
+        #[allow(clippy::unwrap_used)]
+        let alias = Alias::new("Foo", "Bar").unwrap();
+        assert_eq!(alias.to_string(), "alias Foo=\"Bar\"".to_string());
     }
 
     #[ignore]

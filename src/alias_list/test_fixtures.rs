@@ -20,6 +20,7 @@ pub fn sample_buf() -> &'static str {
 #[fixture]
 pub fn sample_aliases() -> AliasList {
     // TODO parameterize with more cases
+    #![allow(clippy::unwrap_used)] // From constants so cannot fail.
     AliasList {
         aliases: vec![
             Alias::new("scut", "cmd").unwrap(),
@@ -27,4 +28,10 @@ pub fn sample_aliases() -> AliasList {
             Alias::new("gs", "git status").unwrap(),
         ],
     }
+}
+
+#[fixture]
+pub fn sample_alias() -> Alias {
+    #[allow(clippy::unwrap_used)]
+    Alias::new("gs", "git status").unwrap()
 }
