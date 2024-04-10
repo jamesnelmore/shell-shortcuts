@@ -33,7 +33,7 @@ unsafe_op_in_unsafe_fn = "forbid"
 [lints.clippy]
 pedantic = "warn"
 enum_glob_use = "deny"
-unwrap_used = "warn"
+unwrap_used = "deny"
 expect_used = "warn"
 cargo = "warn"
 allow_attributes = "deny"
