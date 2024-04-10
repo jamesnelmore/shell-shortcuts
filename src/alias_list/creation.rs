@@ -50,6 +50,8 @@ impl TryFrom<&str> for AliasList {
     }
 }
 
+#[allow(clippy::unwrap_used)]
+#[allow(clippy::expect_used)]
 #[cfg(test)]
 mod test {
     use super::super::test_fixtures::*;
@@ -67,13 +69,20 @@ mod test {
     }
 
     #[rstest]
-    fn from_path_no_file() {
-        todo!("Also mock")
+    fn from_path_no_file(temp_directory: TempDir) {
+        let path = temp_directory.path().join(".aliases");
+
+        let aliases = AliasList::try_from(path);
+
+        assert!(aliases.is_err());
     }
 
     #[rstest]
-    fn path_directory() {
-        todo!()
+    fn path_directory(temp_directory: TempDir) {
+        let path = temp_directory.path().to_path_buf();
+        let aliases = AliasList::try_from(path);
+
+        assert!(aliases.is_err());
     }
 
     fn match_text(haystack: &str) -> Option<Captures> {
