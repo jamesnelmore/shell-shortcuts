@@ -38,7 +38,6 @@ impl TryFrom<&str> for AliasList {
             .flat_map(|capture| {
                 let shortcut = &capture["shortcut"].to_string();
                 let command = &capture["command"].to_string();
-                println!("Captured: {shortcut} | {command}");
                 Alias::new(shortcut, command)
             })
             .collect::<Vec<Alias>>();
@@ -58,8 +57,24 @@ mod test {
     use crate::alias_list::AliasList;
     use regex::Captures;
     use rstest::rstest;
+    use std::path::PathBuf;
+    use tempdir::TempDir;
 
-    // TODO write tests
+    #[rstest]
+    fn from_path_happy(temp_alias_path: PathBuf, sample_aliases: AliasList) {
+        let aliases = AliasList::try_from(temp_alias_path).expect("Could not convert");
+        assert_eq!(aliases, sample_aliases);
+    }
+
+    #[rstest]
+    fn from_path_no_file() {
+        todo!("Also mock")
+    }
+
+    #[rstest]
+    fn path_directory() {
+        todo!()
+    }
 
     fn match_text(haystack: &str) -> Option<Captures> {
         // TODO parameterize with more cases
