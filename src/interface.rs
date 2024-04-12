@@ -2,7 +2,7 @@ use crate::alias_path;
 use crate::{Alias, AliasList, Error};
 use clap::{Parser, Subcommand};
 
-#[derive(Parser)]
+#[derive(Parser, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
 #[command(version, about, long_about = None)]
 pub struct Interface {
     #[command(subcommand)]
@@ -10,11 +10,12 @@ pub struct Interface {
 }
 
 #[non_exhaustive]
-#[derive(Subcommand)]
+#[derive(Subcommand, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
 pub enum Commands {
     Add { shortcut: String, command: String },
     Remove { old_shortcut: String },
     Replace { old: String, new: String },
+    #[default]
     List,
 }
 
