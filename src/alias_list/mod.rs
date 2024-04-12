@@ -5,7 +5,7 @@ mod creation;
 mod display;
 mod test_fixtures;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct AliasList {
     pub aliases: Vec<Alias>,
 }
@@ -60,6 +60,16 @@ impl AliasList {
 
     pub fn iter_mut(&mut self) -> (impl Iterator<Item = &mut Alias> + '_) {
         self.aliases.iter_mut()
+    }
+}
+
+impl FromIterator<Alias> for AliasList {
+    fn from_iter<T>(iter: T) -> Self  where T: IntoIterator<Item = Alias>{
+        let iter = iter.into_iter();
+        
+        AliasList {
+            aliases: iter.collect()
+        }
     }
 }
 
