@@ -1,7 +1,6 @@
 use crate::alias_path;
 use crate::{Alias, AliasList, Error};
 use clap::{Parser, Subcommand};
-use std::process::Command;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -36,14 +35,8 @@ impl Interface {
             }
         }
         aliases.save_to_file(path)?;
-        update_shell()
+        println!("Change saved. Restart shell for alias to take effect.");
+        Ok(())
     }
 }
 
-fn update_shell() -> Result<(), Error> {
-    let command = Command::new("exec zsh").output().expect("Debug");
-    // .map(|_| ())
-    // .map_err(crate::Error::IOError);
-    println!("Ran command");
-    Ok(())
-}
