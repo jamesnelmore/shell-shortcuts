@@ -1,11 +1,12 @@
 use crate::{Alias, Error};
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 mod creation;
 mod display;
 mod test_fixtures;
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serialize, Deserialize)]
 pub struct AliasList {
     pub aliases: Vec<Alias>,
 }
@@ -64,11 +65,14 @@ impl AliasList {
 }
 
 impl FromIterator<Alias> for AliasList {
-    fn from_iter<T>(iter: T) -> Self  where T: IntoIterator<Item = Alias>{
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = Alias>,
+    {
         let iter = iter.into_iter();
-        
+
         AliasList {
-            aliases: iter.collect()
+            aliases: iter.collect(),
         }
     }
 }

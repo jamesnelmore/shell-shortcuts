@@ -2,9 +2,10 @@ mod display;
 mod validation;
 use crate::Error;
 
+use serde::{Deserialize, Serialize};
 use validation::{is_valid_command, is_valid_shortcut};
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serialize, Deserialize)]
 pub struct Alias {
     shortcut: String,
     command: String,
