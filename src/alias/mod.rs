@@ -4,7 +4,7 @@ use crate::Error;
 
 use validation::{is_valid_command, is_valid_shortcut};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Alias {
     shortcut: String,
     command: String,
