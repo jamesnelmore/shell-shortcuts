@@ -3,12 +3,12 @@ name = "shell-shortcuts"
 edition = "2021"
 description = "Command line manager for shell aliases."
 license = "MIT OR Apache-2.0"
-authors = ["James Elmore"]
+authors = ["James Elmore <email@jameselmore.org>"]
 readme = "README.md"
 publish = false
 repository = "https://github.com/jamesnelmore/shell-shortcuts"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = ["cli"]
+categories = ["command-line-utilities"]
 
 [profile.release]
 codegen-units = 1
@@ -28,7 +28,6 @@ tempdir = "0.3.7"
 # TODO change closer to release
 [lints.rust]
 unsafe_code = "forbid"
-dead_code = "allow" 
 unsafe_op_in_unsafe_fn = "forbid"
  
 [lints.clippy]
@@ -46,6 +45,3 @@ doc_link_with_quotes = "warn"
 doc_markdown = "warn"
 if_then_some_else_none = "warn"
 
-# TODO set unwrap/expect used lints for release builds
-# [build]
-# rustflags = ["-Dclippy::unwrap_used", "-Dclippy::expect_used"]
