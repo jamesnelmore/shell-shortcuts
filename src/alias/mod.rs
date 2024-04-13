@@ -17,18 +17,16 @@ impl Alias {
     where
         S: Into<String>,
     {
-        let shortcut = shortcut.into();
-        let command = command.into();
+        let shortcut: String = shortcut.into();
+        let command: String = command.into();
 
         if !is_valid_shortcut(&shortcut) {
-            return Err(Error::InvalidShortcut);
+            return Err(Error::InvalidShortcut(shortcut));
         }
 
         if !is_valid_command(&command) {
-            return Err(Error::InvalidCommand);
+            return Err(Error::InvalidCommand(command));
         }
-
-        // TODO implement and test for case InvalidShortcutAndCommand
 
         Ok(Alias { shortcut, command })
     }
@@ -44,7 +42,7 @@ impl Alias {
             self.shortcut = new_shortcut;
             Ok(())
         } else {
-            Err(Error::InvalidShortcut)
+            Err(Error::InvalidShortcut(new_shortcut))
         }
     }
 
@@ -54,11 +52,13 @@ impl Alias {
 
     // TODO test set_command with valid and invalid commands
     // TODO change set_command to return Result
-    pub fn set_command(&mut self, new_command: String) -> Option<()> {
+    pub fn set_command(&mut self, new_command: String) -> Result<(), Error> {
         if is_valid_command(new_command.as_str()) {
             self.command = new_command;
+            Ok(())
+        } else {
+            Err(Error::InvalidCommand(new_command))
         }
-        None
     }
 }
 

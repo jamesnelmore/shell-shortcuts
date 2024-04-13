@@ -43,7 +43,7 @@ impl TryFrom<&str> for AliasList {
             .collect::<Vec<Alias>>();
 
         if aliases.is_empty() {
-            Err(Self::Error::InvalidString)
+            Err(Self::Error::ParseFailed(value.to_string()))
         } else {
             Ok(AliasList { aliases })
         }

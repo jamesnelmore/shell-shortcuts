@@ -36,7 +36,7 @@ impl AliasList {
         let old_index = self
             .iter()
             .position(|alias| alias.shortcut() == shortcut)
-            .ok_or(Error::InvalidShortcut)?;
+            .ok_or(Error::ShortcutNotFound(shortcut.to_string()))?;
         self.aliases.remove(old_index);
         Ok(())
     }
@@ -45,7 +45,7 @@ impl AliasList {
         let alias: &mut Alias = self
             .iter_mut()
             .find(|alias| alias.shortcut() == old)
-            .ok_or(Error::InvalidShortcut)?;
+            .ok_or(Error::ShortcutNotFound(old.to_string()))?;
         alias.set_shortcut(new)
     }
 
