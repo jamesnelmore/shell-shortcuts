@@ -12,9 +12,17 @@ pub struct Interface {
 #[non_exhaustive]
 #[derive(Subcommand, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
 pub enum Commands {
-    Add { shortcut: String, command: String },
-    Remove { old_shortcut: String },
-    Replace { old: String, new: String },
+    Add {
+        shortcut: String,
+        command: String,
+    },
+    Remove {
+        old_shortcut: String,
+    },
+    Replace {
+        old: String,
+        new: String,
+    },
     #[default]
     List,
 }
@@ -40,4 +48,3 @@ impl Interface {
         Ok(())
     }
 }
-
