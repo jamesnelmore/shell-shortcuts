@@ -52,6 +52,7 @@ impl Alias {
 
     // TODO test set_command with valid and invalid commands
     // TODO change set_command to return Result
+    #[allow(dead_code)]
     pub fn set_command(&mut self, new_command: String) -> Result<(), Error> {
         if is_valid_command(new_command.as_str()) {
             self.command = new_command;
