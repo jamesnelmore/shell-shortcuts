@@ -2,10 +2,10 @@
 name = "shell-shortcuts"
 edition = "2021"
 description = "Command line manager for shell aliases."
+version = "0.0.1"
 license = "MIT OR Apache-2.0"
 authors = ["James Elmore <email@jameselmore.org>"]
 readme = "README.md"
-publish = false
 repository = "https://github.com/jamesnelmore/shell-shortcuts"
 keywords = ["cli"]
 categories = ["command-line-utilities"]
@@ -22,7 +22,7 @@ thiserror = "1.0.58"
 
 [dev-dependencies]
 indoc = "2.0.4"
-rstest = {version="0.18.2", default-features=false}
+rstest = {version="0.19", default-features=false}
 tempdir = "0.3.7"
 
 # TODO change closer to release
