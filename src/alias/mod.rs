@@ -63,13 +63,10 @@ impl Alias {
     }
 }
 
+
 impl Clone for Alias {
     fn clone(&self) -> Self {
-        Alias {
-            shortcut: self.shortcut().clone(),
-            command: self.command().clone(),
-        }
-        // TODO test
+        Alias::new(&self.shortcut, &self.command()).expect("Failed to clone alias")
     }
 }
 
